@@ -24,12 +24,20 @@ Task::~Task()
 // hooks defined by Orocos::RTT. See Task.hpp for more detailed
 // documentation about them.
 
-// bool Task::configureHook()
-// {
-//     if (! TaskBase::configureHook())
-//         return false;
-//     return true;
-// }
+ bool Task::configureHook()
+ {
+     if (! TaskBase::configureHook())
+         return false;
+
+     std::vector<camera::CamInfo> camera_list;
+     std::auto_ptr<camera::CamIds> camera(new camera::CamIds());
+
+     camera->listCameras(camera_list);
+     camera->open(camera_list[0]);
+     cam_interface = camera.release();
+
+     return true;
+ }
 // bool Task::startHook()
 // {
 //     if (! TaskBase::startHook())

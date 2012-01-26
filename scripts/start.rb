@@ -25,9 +25,10 @@ Orocos.run 'camera' do
     camera.gain = 0
     camera.gain_mode_auto = 0
     camera.camera_format = :MODE_RGB
+    camera.output_format = :MODE_RGB
     #camera.camera_format = :MODE_BAYER
-    camera.output_format = :MODE_BAYER
-    camera.resize_algorithm = :BAYER_RESIZE
+    #camera.output_format = :MODE_BAYER
+    #camera.resize_algorithm = :BAYER_RESIZE
     camera.scale_x = 0.5
     camera.scale_y = 0.5
     camera.log_interval_in_sec = 5
@@ -36,6 +37,8 @@ Orocos.run 'camera' do
 
     camera.configure
     camera.start
+
+    Orocos.log_all
 
     #Vizkit.control camera
     viewer = Vizkit.default_loader.StructViewer

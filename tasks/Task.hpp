@@ -4,6 +4,7 @@
 #define CAMERA_IDS_TASK_TASK_HPP
 
 #include "camera_ids/TaskBase.hpp"
+#include "camera_ids/CamIds.h"
 
 namespace camera_ids {
 
@@ -60,7 +61,7 @@ namespace camera_ids {
          end
          \endverbatim
          */
-        // bool configureHook();
+        bool configureHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Stopped to Running. If it returns false, then the component will

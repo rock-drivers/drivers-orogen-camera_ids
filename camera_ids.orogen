@@ -10,6 +10,7 @@ task_context "Task" do
 end
 
 deployment "camera" do
-   task("camera_display", "Task")
+   task("camera_display", "Task").
+      periodic 0.016
    add_default_logger 
 end
