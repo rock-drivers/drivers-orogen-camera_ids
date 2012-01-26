@@ -1,0 +1,15 @@
+name "camera_ids"
+
+using_library "camera_ids"
+using_library "opencv"
+using_task_library "camera_base"
+import_types_from "camera_base"
+
+task_context "Task" do
+   subclasses "camera_base::Task"
+end
+
+deployment "camera" do
+   task("camera_display", "Task")
+   add_default_logger 
+end
