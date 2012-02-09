@@ -26,8 +26,7 @@ namespace camera_ids {
     {
 	friend class TaskBase;
     protected:
-
-
+	    camera::AccessMode camera_access_mode;
 
     public:
         /** TaskContext constructor for Task

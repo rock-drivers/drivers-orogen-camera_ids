@@ -16,7 +16,7 @@
   <depend package="base/types" />
   <depend package="opencv" />
   <depend package="drivers/orogen/camera_base" />
-  <depend package="drivers/camera_ueye" />
+  <depend package="drivers/camera_ids" />
   <depend package="drivers/aggregator" />
   <depend package="drivers/orogen/aggregator" />
 </package>
