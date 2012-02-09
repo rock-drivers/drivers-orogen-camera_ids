@@ -7,10 +7,5 @@ import_types_from "camera_base"
 
 task_context "Task" do
    subclasses "camera_base::Task"
-end
-
-deployment "camera" do
-   task("camera_display", "Task").
-      periodic 0.016
-   add_default_logger 
+   periodic(0.005)
 end
