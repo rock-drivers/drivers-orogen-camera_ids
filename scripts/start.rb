@@ -5,6 +5,8 @@ require 'readline'
 require 'vizkit'
 include Orocos
 
+Orocos::CORBA::max_message_size=8*1024*1024
+
 Orocos.initialize
 
 Orocos.run 'camera_ids::Task' => 'camera' do 
