@@ -7,5 +7,17 @@ import_types_from "camera_base"
 
 task_context "Task" do
    subclasses "camera_base::Task"
-   periodic(0.005)
+   periodic(0.002)
+
+   property("pixel_clock", "int", 10).
+       doc "pixel reading rate in MHz"
+   property("mirror_x", "bool", false).
+       doc "mirror image horizontally"
+   property("mirror_y", "bool", false).
+       doc "mirror image vertically" #todo
+   property("edge_enhancement", "bool", false).
+       doc "sharpen edges" #todo
+   property("hotpixel_correction", "bool", false).
+       doc "perform hotpixel correction" #todo
 end
+
