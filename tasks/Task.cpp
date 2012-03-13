@@ -55,8 +55,14 @@ Task::~Task()
          std::auto_ptr<camera::CamIds> camera(new camera::CamIds());
          RTT::log(RTT::Info) << "opening camera" << RTT::endlog();
 
-         std::vector<CamInfo> cameraList;
-         camera->listCameras(cameraList);   // get the list of cameras
+
+        CamInfo cam_info;
+        cam_info.unique_id = camera_id;
+        camera->open(cam_info, this->camera_access_mode);
+
+        /*  
+        //std::vector<CamInfo> cameraList;
+         //camera->listCameras(cameraList);   // get the list of cameras
 
          for (unsigned int it = 0; it < cameraList.size(); ++it) {
              if (cameraList[it].unique_id == camera_id) {
@@ -64,7 +70,7 @@ Task::~Task()
                  break;
              }
          }
-
+        */
          if (camera->isOpen() == false) {
              RTT::log(RTT::Error) << "camera not found" << RTT::endlog();
          }
