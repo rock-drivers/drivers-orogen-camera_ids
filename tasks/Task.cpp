@@ -84,12 +84,16 @@ Task::~Task()
 
      return true;
  }
-// bool Task::startHook()
-// {
-//     if (! TaskBase::startHook())
-//         return false;
-//     return true;
-// }
+
+bool Task::startHook()
+{
+    configureCameraIDS();
+
+     if (! TaskBase::startHook())
+         return false;
+   
+    return true; 
+}
 // void Task::updateHook()
 // {
 //     TaskBase::updateHook();
@@ -106,4 +110,21 @@ Task::~Task()
 // {
 //     TaskBase::cleanupHook();
 // }
+
+void Task::configureCameraIDS()
+{
+    if(cam_interface->isAttribAvail(int_attrib::PixelClock))
+    {
+        cam_interface->setAttrib(int_attrib::PixelClock, _pixel_clock.get());
+    }
+
+    if( cam_interface->isAttribAvail(enum_attrib::MirrorXToOn) &&
+        cam_interface->isAttribAvail(enum_attrib::MirrorXToOff) )
+    {
+        if ( _mirror_x.get() )
+            cam_interface->setAttrib(enum_attrib::MirrorXToOn);
+        else
+            cam_interface->setAttrib(enum_attrib::MirrorXToOff);
+    }
+}
 

@@ -67,7 +67,7 @@ namespace camera_ids {
          * stay in Stopped. Otherwise, it goes into Running and updateHook()
          * will be called.
          */
-        // bool startHook();
+        bool startHook();
 
         /** This hook is called by Orocos when the component is in the Running
          * state, at each activity step. Here, the activity gives the "ticks"
@@ -103,6 +103,9 @@ namespace camera_ids {
          * before calling start() again.
          */
         // void cleanupHook();
+        
+        /** Special configuration for IDS camera. */
+        void configureCameraIDS();
     };
 }
 
