@@ -105,7 +105,7 @@ namespace camera_ids {
         // void cleanupHook();
         
         /** Special configuration for IDS camera. */
-        void configureCameraIDS();
+        bool configureCamera();
     };
 }
 
