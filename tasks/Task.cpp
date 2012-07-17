@@ -170,16 +170,25 @@ bool Task::configureCamera()
         return false;
     }
     
-    //setting ExposureValue
+    // setting ExposureValue
     if(cam_interface->isAttribAvail(int_attrib::ExposureValue))
         cam_interface->setAttrib(camera::int_attrib::ExposureValue,_exposure);
     else
         RTT::log(RTT::Info) << "ExposureValue is not supported by the camera" << RTT::endlog();
 
+    // set binning
+    if( cam_interface->isAttribAvail(int_attrib::BinningX) )
+        cam_interface->setAttrib(int_attrib::BinningX, _binning_x.get() );
+    else
+        RTT::log(RTT::Info) << "BinningX is not supported by the camera" << RTT::endlog();
     
+    if( cam_interface->isAttribAvail(int_attrib::BinningY) )
+        cam_interface->setAttrib(int_attrib::BinningY, _binning_y.get() );
+    else
+        RTT::log(RTT::Info) << "BinningY is not supported by the camera" << RTT::endlog();
     
 
-
+    // set mirrors
     if( cam_interface->isAttribAvail(enum_attrib::MirrorXToOn) &&
         cam_interface->isAttribAvail(enum_attrib::MirrorXToOff) )
     {
@@ -188,5 +197,25 @@ bool Task::configureCamera()
         else
             cam_interface->setAttrib(enum_attrib::MirrorXToOff);
     }
+    
+    if( cam_interface->isAttribAvail(enum_attrib::MirrorYToOn) &&
+        cam_interface->isAttribAvail(enum_attrib::MirrorYToOff) )
+    {
+        if ( _mirror_y.get() )
+            cam_interface->setAttrib(enum_attrib::MirrorYToOn);
+        else
+            cam_interface->setAttrib(enum_attrib::MirrorYToOff);
+    }
+
+    // set region
+    if( cam_interface->isAttribAvail(int_attrib::RegionX) )
+        cam_interface->setAttrib(int_attrib::RegionX, _region_x.get() );
+    else
+        RTT::log(RTT::Info) << "RegionX is not supported by the camera" << RTT::endlog();
+
+    if( cam_interface->isAttribAvail(int_attrib::RegionY) )
+        cam_interface->setAttrib(int_attrib::RegionY, _region_y.get() );
+    else
+        RTT::log(RTT::Info) << "RegionY is not supported by the camera" << RTT::endlog();
 }
 
