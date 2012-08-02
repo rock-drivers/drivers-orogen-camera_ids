@@ -93,10 +93,11 @@ bool Task::startHook()
    
     return true; 
 }
-// void Task::updateHook()
-// {
-//     TaskBase::updateHook();
-// }
+void Task::updateHook()
+{
+    if(cam_interface->isFrameAvailable() && getFrame())
+        _frame.write(camera_frame);
+}
 // void Task::errorHook()
 // {
 //     TaskBase::errorHook();
