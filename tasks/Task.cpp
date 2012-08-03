@@ -125,6 +125,17 @@ bool Task::configureCamera()
         return false;
     }
     
+    // set binning
+    if( cam_interface->isAttribAvail(int_attrib::BinningX) )
+        cam_interface->setAttrib(int_attrib::BinningX, _binning_x.get() );
+    else
+        RTT::log(RTT::Info) << "BinningX is not supported by the camera" << RTT::endlog();
+    
+    if( cam_interface->isAttribAvail(int_attrib::BinningY) )
+        cam_interface->setAttrib(int_attrib::BinningY, _binning_y.get() );
+    else
+        RTT::log(RTT::Info) << "BinningY is not supported by the camera" << RTT::endlog();
+    
     // Pixelclock
     cam_interface->setAttrib(int_attrib::PixelClock, _pixel_clock.get());
     
@@ -177,16 +188,6 @@ bool Task::configureCamera()
     else
         RTT::log(RTT::Info) << "ExposureValue is not supported by the camera" << RTT::endlog();
 
-    // set binning
-    if( cam_interface->isAttribAvail(int_attrib::BinningX) )
-        cam_interface->setAttrib(int_attrib::BinningX, _binning_x.get() );
-    else
-        RTT::log(RTT::Info) << "BinningX is not supported by the camera" << RTT::endlog();
-    
-    if( cam_interface->isAttribAvail(int_attrib::BinningY) )
-        cam_interface->setAttrib(int_attrib::BinningY, _binning_y.get() );
-    else
-        RTT::log(RTT::Info) << "BinningY is not supported by the camera" << RTT::endlog();
     
 
     // set mirrors
