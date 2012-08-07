@@ -4,7 +4,12 @@
 #define CAMERA_IDS_TASK_TASK_HPP
 
 #include "camera_ids/TaskBase.hpp"
-#include "camera_ids/CamIds.h"
+#include <camera_ids/CamIds.h>
+#include <aggregator/TimestampEstimator.hpp>
+
+namespace aggregator {
+    class TimestampEstimator;
+}
 
 namespace camera_ids {
 
@@ -28,7 +33,10 @@ namespace camera_ids {
     protected:
 	    camera::AccessMode camera_access_mode;
 
+            aggregator::TimestampEstimator* mpTimestamper;
+
             bool mIsFrame;
+
     public:
         /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
@@ -103,7 +111,7 @@ namespace camera_ids {
          * from Stopped to PreOperational, requiring the call to configureHook()
          * before calling start() again.
          */
-        // void cleanupHook();
+        void cleanupHook();
         
         /** Special configuration for IDS camera. */
         bool configureCamera();

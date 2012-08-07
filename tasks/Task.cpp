@@ -8,25 +8,24 @@ using namespace base::samples;
 
 Task::Task(std::string const& name)
     : TaskBase(name), mIsFrame(false)
+    ,mpTimestamper(0)
 {
 }
 
 Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
     : TaskBase(name, engine),  mIsFrame(false)
+    ,mpTimestamper(0)
 {
 }
 
 Task::~Task()
 {
+    if (mpTimestamper)
+        delete mpTimestamper;
 }
 
 
-
-/// The following lines are template definitions for the various state machine
-// hooks defined by Orocos::RTT. See Task.hpp for more detailed
-// documentation about them.
-
- bool Task::configureHook()
+bool Task::configureHook()
  {
      if (! TaskBase::configureHook())
          return false;
@@ -72,6 +71,10 @@ Task::~Task()
      }
      double period = 1. / _fps.get();
 
+     if (mpTimestamper) delete mpTimestamper;
+     mpTimestamper = new aggregator::TimestampEstimator(
+             base::Time::fromSeconds(20*period),
+             base::Time::fromSeconds(period) );
      ((camera::CamIds*)cam_interface)->setEventTimeout( (int)(period*2000) );
      return true;
  }
@@ -81,17 +84,29 @@ bool Task::startHook()
 
      if (! TaskBase::startHook())
          return false;
-   
+
+    mpTimestamper->reset();
     mIsFrame = false;
     
     return true; 
 }
+
 void Task::updateHook()
 {
     if(mIsFrame && getFrame()) {
+
+        base::samples::frame::Frame *frame_ptr = camera_frame.write_access();
+
+        frame_ptr->time = mpTimestamper->update( frame_ptr->time,
+            frame_ptr->getAttribute<uint64_t>("FrameCount") );
+
+        camera_frame.reset(frame_ptr);
+
         _frame.write(camera_frame);
     }
+
     mIsFrame = false;
+
     if (cam_interface->isFrameAvailable()) {
         mIsFrame = true;
         this->getActivity()->trigger();
@@ -105,18 +120,16 @@ void Task::errorHook()
 {
     TaskBase::errorHook();
 }
-// void Task::errorHook()
-// {
-//     TaskBase::errorHook();
-// }
 // void Task::stopHook()
 // {
 //     TaskBase::stopHook();
 // }
-// void Task::cleanupHook()
-// {
-//     TaskBase::cleanupHook();
-// }
+void Task::cleanupHook()
+{
+    delete mpTimestamper;
+    mpTimestamper = 0;
+    TaskBase::cleanupHook();
+}
 
 bool Task::configureCamera()
 {

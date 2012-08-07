@@ -1,7 +1,10 @@
 name "camera_ids"
 
-using_library "camera_ids"
+
 using_library "opencv"
+using_library "camera_ids"
+using_library "aggregator"
+import_types_from "aggregator"
 using_task_library "camera_base"
 import_types_from "camera_base"
 
