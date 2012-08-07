@@ -7,12 +7,12 @@ using namespace camera_ids;
 using namespace base::samples;
 
 Task::Task(std::string const& name)
-    : TaskBase(name)
+    : TaskBase(name), mIsFrame(false)
 {
 }
 
 Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
-    : TaskBase(name, engine)
+    : TaskBase(name, engine),  mIsFrame(false)
 {
 }
 
@@ -60,17 +60,6 @@ Task::~Task()
         cam_info.unique_id = camera_id;
         camera->open(cam_info, this->camera_access_mode);
 
-        /*  
-        //std::vector<CamInfo> cameraList;
-         //camera->listCameras(cameraList);   // get the list of cameras
-
-         for (unsigned int it = 0; it < cameraList.size(); ++it) {
-             if (cameraList[it].unique_id == camera_id) {
-                 camera->open(cameraList[it], this->camera_access_mode);
-                 break;
-             }
-         }
-        */
          if (camera->isOpen() == false) {
              RTT::log(RTT::Error) << "camera not found" << RTT::endlog();
          }
@@ -81,7 +70,9 @@ Task::~Task()
          RTT::log(RTT::Error) << "failed to initialize camera: " << e.what() << RTT::endlog();
          return false;
      }
+     double period = 1. / _fps.get();
 
+     ((camera::CamIds*)cam_interface)->setEventTimeout( (int)(period*2000) );
      return true;
  }
 
@@ -91,12 +82,28 @@ bool Task::startHook()
      if (! TaskBase::startHook())
          return false;
    
+    mIsFrame = false;
+    
     return true; 
 }
 void Task::updateHook()
 {
-    if(cam_interface->isFrameAvailable() && getFrame())
+    if(mIsFrame && getFrame()) {
         _frame.write(camera_frame);
+    }
+    mIsFrame = false;
+    if (cam_interface->isFrameAvailable()) {
+        mIsFrame = true;
+        this->getActivity()->trigger();
+    } else {
+        RTT::log(RTT::Error) << "No frame received during timeout period." << RTT::endlog();
+        report(TIMEOUT_ERROR);
+    }
+}
+
+void Task::errorHook()
+{
+    TaskBase::errorHook();
 }
 // void Task::errorHook()
 // {

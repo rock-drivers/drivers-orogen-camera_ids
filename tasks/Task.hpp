@@ -28,6 +28,7 @@ namespace camera_ids {
     protected:
 	    camera::AccessMode camera_access_mode;
 
+            bool mIsFrame;
     public:
         /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
@@ -91,7 +92,7 @@ namespace camera_ids {
          *
          * Call recover() to go back in the Runtime state.
          */
-        // void errorHook();
+        void errorHook();
 
         /** This hook is called by Orocos when the state machine transitions
          * from Running to Stopped after stop() has been called.
