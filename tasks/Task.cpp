@@ -69,13 +69,17 @@ bool Task::configureHook()
          RTT::log(RTT::Error) << "failed to initialize camera: " << e.what() << RTT::endlog();
          return false;
      }
+    
      double period = 1. / _fps.get();
 
      if (mpTimestamper) delete mpTimestamper;
      mpTimestamper = new aggregator::TimestampEstimator(
              base::Time::fromSeconds(20*period),
              base::Time::fromSeconds(period) );
-     ((camera::CamIds*)cam_interface)->setEventTimeout( (int)(period*2000) );
+
+     ((camera::CamIds*)cam_interface)->setEventTimeout( 
+         (int)(_timeout_periods.get() * period * 1000.) );
+
      return true;
  }
 
@@ -103,6 +107,8 @@ void Task::updateHook()
         camera_frame.reset(frame_ptr);
 
         _frame.write(camera_frame);
+        
+        _timestamp_estimator_status.write(mpTimestamper->getStatus());
     }
 
     mIsFrame = false;

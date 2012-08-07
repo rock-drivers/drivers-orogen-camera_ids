@@ -16,11 +16,15 @@ task_context "Task" do
    property("mirror_x", "bool", false).
        doc "mirror image horizontally"
    property("mirror_y", "bool", false).
-       doc "mirror image vertically" #todo
+       doc "mirror image vertically"
+   property("timeout_periods", "int", 2).
+       doc "waits for a new image timeout_periods times 1 / fps seconds"
    property("edge_enhancement", "bool", false).
        doc "sharpen edges" #todo
    property("hotpixel_correction", "bool", false).
        doc "perform hotpixel correction" #todo
+
+   output_port "timestamp_estimator_status", "/aggregator/TimestampEstimatorStatus"
 
    reports :TIMEOUT_ERROR
 end
