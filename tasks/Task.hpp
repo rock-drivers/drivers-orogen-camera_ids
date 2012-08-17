@@ -7,6 +7,12 @@
 #include <camera_ids/CamIds.h>
 #include <aggregator/TimestampEstimator.hpp>
 
+
+/** \mainpage Orocos componenten for IDS-Cameras
+ *
+ * See camera_ids::Task for further information.
+ */
+
 namespace aggregator {
     class TimestampEstimator;
 }
@@ -14,18 +20,20 @@ namespace aggregator {
 namespace camera_ids {
 
     /*! \class Task 
-     * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
-     * Essential interfaces are operations, data flow ports and properties. These interfaces have been defined using the oroGen specification.
-     * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
+     * \brief This is the task context for the camera_ids providing properties and
+     * ports for configuration and data flow. It is generated using oroGen and.
      * 
-     * \details
-     * The name of a TaskContext is primarily defined via:
+     * It depends on the orogen/camera_base package and task. 
+     * To use it in deployments do 
+     * \details The name of a TaskContext is primarily defined via:
      \verbatim
      deployment 'deployment_name'
          task('custom_task_name','camera_ids::Task')
      end
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
+     * It facilitates the timestamp estimator and triggers itself. So in deployments
+     * don't give any trigger.
      */
     class Task : public TaskBase
     {
