@@ -185,8 +185,14 @@ bool Task::configureCamera()
     }
     else if(_exposure_mode.value() =="manual")
     {
-        if(cam_interface->isAttribAvail(camera::enum_attrib::ExposureModeToManual))
+        if(cam_interface->isAttribAvail(camera::enum_attrib::ExposureModeToManual)) {
             cam_interface->setAttrib(camera::enum_attrib::ExposureModeToManual);
+            // setting ExposureValue
+            if(cam_interface->isAttribAvail(int_attrib::ExposureValue))
+                cam_interface->setAttrib(camera::int_attrib::ExposureValue,_exposure);
+            else
+                RTT::log(RTT::Info) << "ExposureValue is not supported by the camera" << RTT::endlog();
+            }
         else
             RTT::log(RTT::Info) << "ExposureModeToManual is not supported by the camera" << RTT::endlog();
     }
@@ -208,11 +214,6 @@ bool Task::configureCamera()
         return false;
     }
     
-    // setting ExposureValue
-    if(cam_interface->isAttribAvail(int_attrib::ExposureValue))
-        cam_interface->setAttrib(camera::int_attrib::ExposureValue,_exposure);
-    else
-        RTT::log(RTT::Info) << "ExposureValue is not supported by the camera" << RTT::endlog();
 
     
 
