@@ -8,20 +8,16 @@ using namespace base::samples;
 
 Task::Task(std::string const& name)
     : TaskBase(name), mIsFrame(false)
-    ,mpTimestamper(0)
 {
 }
 
 Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
     : TaskBase(name, engine),  mIsFrame(false)
-    ,mpTimestamper(0)
 {
 }
 
 Task::~Task()
 {
-    if (mpTimestamper)
-        delete mpTimestamper;
 }
 
 
@@ -72,10 +68,7 @@ bool Task::configureHook()
     
      double period = 1. / _fps.get();
 
-     if (mpTimestamper) delete mpTimestamper;
-     mpTimestamper = new aggregator::TimestampEstimator(
-             base::Time::fromSeconds(20*period),
-             base::Time::fromSeconds(period) );
+     RTT::log(RTT::Info) << "period is " << period << " s" << RTT::endlog();
 
      ((camera::CamIds*)cam_interface)->setEventTimeout( 
          (int)(_timeout_periods.get() * period * 1000.) );
@@ -89,7 +82,6 @@ bool Task::startHook()
      if (! TaskBase::startHook())
          return false;
 
-    mpTimestamper->reset();
     mIsFrame = false;
     
     return true; 
@@ -100,15 +92,13 @@ void Task::updateHook()
     if(mIsFrame && getFrame()) {
 
         base::samples::frame::Frame *frame_ptr = camera_frame.write_access();
-
-        frame_ptr->time = mpTimestamper->update( frame_ptr->time,
-            frame_ptr->getAttribute<uint64_t>("FrameCount") );
-
         camera_frame.reset(frame_ptr);
 
         _frame.write(camera_frame);
-        
-        _timestamp_estimator_status.write(mpTimestamper->getStatus());
+
+    } else {
+
+        RTT::log(RTT::Warning) << "Got invalid frame!" << RTT::endlog();
     }
 
     mIsFrame = false;
@@ -132,8 +122,6 @@ void Task::errorHook()
 // }
 void Task::cleanupHook()
 {
-    delete mpTimestamper;
-    mpTimestamper = 0;
     TaskBase::cleanupHook();
 }
 

@@ -5,7 +5,6 @@
 
 #include "camera_ids/TaskBase.hpp"
 #include <camera_ids/CamIds.h>
-#include <aggregator/TimestampEstimator.hpp>
 
 
 /** \mainpage Orocos componenten for IDS-Cameras
@@ -40,8 +39,6 @@ namespace camera_ids {
 	friend class TaskBase;
     protected:
 	    camera::AccessMode camera_access_mode;
-
-            aggregator::TimestampEstimator* mpTimestamper;
 
             bool mIsFrame;
 

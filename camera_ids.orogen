@@ -24,8 +24,6 @@ task_context "Task" do
    property("hotpixel_correction", "bool", false).
        doc "perform hotpixel correction" #todo
 
-   output_port "timestamp_estimator_status", "/aggregator/TimestampEstimatorStatus"
-
    reports :TIMEOUT_ERROR
 end
 
