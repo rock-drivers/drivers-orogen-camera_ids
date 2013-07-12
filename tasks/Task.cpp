@@ -7,12 +7,12 @@ using namespace camera_ids;
 using namespace base::samples;
 
 Task::Task(std::string const& name)
-    : TaskBase(name), mIsFrame(false)
+    : TaskBase(name)
 {
 }
 
 Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
-    : TaskBase(name, engine),  mIsFrame(false)
+    : TaskBase(name, engine)
 {
 }
 
@@ -82,14 +82,19 @@ bool Task::startHook()
      if (! TaskBase::startHook())
          return false;
 
-    mIsFrame = false;
+    RTT::log(RTT::Info) << "Start camera " << _camera_id.value() << RTT::endlog();
     
     return true; 
 }
 
 void Task::updateHook()
-{
-    if(mIsFrame && getFrame()) {
+{ 
+    
+    if (!cam_interface->isFrameAvailable()) {
+        RTT::log(RTT::Error) << "No frame received during timeout period." << RTT::endlog();
+        report(TIMEOUT_ERROR);
+    }
+    if(getFrame()) {
 
         base::samples::frame::Frame *frame_ptr = camera_frame.write_access();
         camera_frame.reset(frame_ptr);
@@ -101,15 +106,7 @@ void Task::updateHook()
         RTT::log(RTT::Warning) << "Got invalid frame!" << RTT::endlog();
     }
 
-    mIsFrame = false;
-
-    if (cam_interface->isFrameAvailable()) {
-        mIsFrame = true;
-        this->getActivity()->trigger();
-    } else {
-        RTT::log(RTT::Error) << "No frame received during timeout period." << RTT::endlog();
-        report(TIMEOUT_ERROR);
-    }
+    this->getActivity()->trigger();
 }
 
 void Task::errorHook()
