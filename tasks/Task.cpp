@@ -70,8 +70,11 @@ bool Task::configureHook()
 
      RTT::log(RTT::Info) << "period is " << period << " s" << RTT::endlog();
 
-     ((camera::CamIds*)cam_interface)->setEventTimeout( 
-         (int)(_timeout_periods.get() * period * 1000.) );
+     camera::CamIds* cids_ptr = static_cast<camera::CamIds*>(cam_interface);
+
+     cids_ptr->setEventTimeout(int(_timeout_periods.get() * period * 1000.));
+
+     cids_ptr->setErrorReport(true);
 
      return true;
  }
