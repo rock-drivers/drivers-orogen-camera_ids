@@ -91,7 +91,13 @@ bool Task::startHook()
 }
 
 void Task::updateHook()
-{ 
+{
+    static unsigned int counter = 0;
+
+    if ( counter % _capture_status_divider.get() == 0 )
+        _capture_status.write(
+                static_cast<camera::CamIds*>(cam_interface)->getCaptureStatus());
+    counter++;
     
     if (!cam_interface->isFrameAvailable()) {
         RTT::log(RTT::Error) << "No frame received during timeout period." << RTT::endlog();
