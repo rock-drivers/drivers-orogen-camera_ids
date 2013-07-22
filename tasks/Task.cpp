@@ -57,6 +57,7 @@ bool Task::configureHook()
 
          if (camera->isOpen() == false) {
              RTT::log(RTT::Error) << "camera not found" << RTT::endlog();
+             return false;
          }
 
          cam_interface = camera.release();
@@ -74,7 +75,7 @@ bool Task::configureHook()
 
      cids_ptr->setEventTimeout(int(_timeout_periods.get() * period * 1000.));
 
-     cids_ptr->setErrorReport(true);
+     if (_enable_api_log.get()) cids_ptr->setErrorReport(true);
 
      return true;
  }

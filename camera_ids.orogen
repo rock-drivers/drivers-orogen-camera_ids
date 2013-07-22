@@ -23,13 +23,13 @@ task_context "Task" do
    property("edge_enhancement", "bool", false).
        doc "sharpen edges" #todo
    property("hotpixel_correction", "bool", false).
-       doc "perform hotpixel correction" #todo
-   
+       doc "perform hotpixel correction" #todo   
    property("capture_status_divider", "int", 10).
        doc "the captures status is written each nth frame"
+   property("enable_api_log", "bool", false).
+       doc "enables api directly outputs error messages"
 
    output_port "capture_status", "camera/CaptureStatus"
-
 
    reports :TIMEOUT_ERROR
 end
