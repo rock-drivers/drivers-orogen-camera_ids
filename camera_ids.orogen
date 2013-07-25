@@ -28,6 +28,8 @@ task_context "Task" do
        doc "the captures status is written each nth frame"
    property("enable_api_log", "bool", false).
        doc "enables api directly outputs error messages"
+   property("get_every_frame", "bool", false).
+       doc "if true retrieves all frames, get latest frame otherwise"
 
    output_port "capture_status", "camera/CaptureStatus"
 

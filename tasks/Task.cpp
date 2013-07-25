@@ -77,6 +77,8 @@ bool Task::configureHook()
 
      if (_enable_api_log.get()) cids_ptr->setErrorReport(true);
 
+     cids_ptr->setGetEveryFrame(_get_every_frame.get());
+     
      return true;
  }
 
@@ -247,5 +249,7 @@ bool Task::configureCamera()
         cam_interface->setAttrib(int_attrib::RegionY, _region_y.get() );
     else
         RTT::log(RTT::Info) << "RegionY is not supported by the camera" << RTT::endlog();
+
+    return true;
 }
 
