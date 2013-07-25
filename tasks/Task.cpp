@@ -93,17 +93,22 @@ bool Task::startHook()
 
 void Task::updateHook()
 {
+    static base::Time tlast = base::Time::now();
     static unsigned int counter = 0;
 
     if ( counter % _capture_status_divider.get() == 0 )
         _capture_status.write(
                 static_cast<camera::CamIds*>(cam_interface)->getCaptureStatus());
     counter++;
-    
+
+    base::Time tstart = base::Time::now();
     if (!cam_interface->isFrameAvailable()) {
         RTT::log(RTT::Error) << "No frame received during timeout period." << RTT::endlog();
         report(TIMEOUT_ERROR);
     }
+    base::Time there = base::Time::now();
+    RTT::log(RTT::Debug) << "time for triggering: " << (tstart-tlast).toSeconds()
+        << "; time to wait: " << (there - tstart).toSeconds() << RTT::endlog();
     if(getFrame()) {
 
         base::samples::frame::Frame *frame_ptr = camera_frame.write_access();
@@ -113,9 +118,10 @@ void Task::updateHook()
 
     } else {
 
-        RTT::log(RTT::Warning) << "Got invalid frame!" << RTT::endlog();
+        RTT::log(RTT::Warning) << "Error during frame retrieval!" << RTT::endlog();
     }
 
+    tlast = base::Time::now();
     this->getActivity()->trigger();
 }
 
