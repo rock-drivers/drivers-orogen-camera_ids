@@ -142,83 +142,8 @@ void Task::cleanupHook()
 
 bool Task::configureCamera()
 {
-    //setting resolution and color mode
-    try
-    {
-        cam_interface->setFrameSettings(*camera_frame);
-    }
-    catch(std::runtime_error e)
-    {
-        RTT::log(RTT::Error) << "failed to configure camera: " << e.what() << RTT::endlog();
-        report(CONFIGURE_ERROR);
-        return false;
-    }
-    
-    // set binning
-    if( cam_interface->isAttribAvail(int_attrib::BinningX) )
-        cam_interface->setAttrib(int_attrib::BinningX, _binning_x.get() );
-    else
-        RTT::log(RTT::Info) << "BinningX is not supported by the camera" << RTT::endlog();
-    
-    if( cam_interface->isAttribAvail(int_attrib::BinningY) )
-        cam_interface->setAttrib(int_attrib::BinningY, _binning_y.get() );
-    else
-        RTT::log(RTT::Info) << "BinningY is not supported by the camera" << RTT::endlog();
-    
     // Pixelclock
     cam_interface->setAttrib(int_attrib::PixelClock, _pixel_clock.get());
-    
-    //setting FrameRate
-    if(_trigger_mode.value() == "fixed")
-    {
-        if (cam_interface->isAttribAvail(double_attrib::FrameRate))
-            cam_interface->setAttrib(camera::double_attrib::FrameRate,_fps);
-        else
-            RTT::log(RTT::Info) << "FrameRate is not supported by the camera" << RTT::endlog();
-    } else
-        RTT::log(RTT::Info) << "set trigger_mode to fixed" << RTT::endlog();
-    
-    //setting _exposure_mode
-    if(_exposure_mode.value() == "auto")
-    {
-        if(cam_interface->isAttribAvail(camera::enum_attrib::ExposureModeToAuto))
-            cam_interface->setAttrib(camera::enum_attrib::ExposureModeToAuto);
-        else
-            RTT::log(RTT::Info) << "ExposureModeToAuto is not supported by the camera" << RTT::endlog();
-    }
-    else if(_exposure_mode.value() =="manual")
-    {
-        if(cam_interface->isAttribAvail(camera::enum_attrib::ExposureModeToManual)) {
-            cam_interface->setAttrib(camera::enum_attrib::ExposureModeToManual);
-            // setting ExposureValue
-            if(cam_interface->isAttribAvail(int_attrib::ExposureValue))
-                cam_interface->setAttrib(camera::int_attrib::ExposureValue,_exposure);
-            else
-                RTT::log(RTT::Info) << "ExposureValue is not supported by the camera" << RTT::endlog();
-            }
-        else
-            RTT::log(RTT::Info) << "ExposureModeToManual is not supported by the camera" << RTT::endlog();
-    }
-    else if (_exposure_mode.value() =="external")
-    {
-        if(cam_interface->isAttribAvail(camera::enum_attrib::ExposureModeToExternal))
-            cam_interface->setAttrib(camera::enum_attrib::ExposureModeToExternal);
-        else
-            RTT::log(RTT::Info) << "ExposureModeToExternal is not supported by the camera" << RTT::endlog();
-    }
-    else if(_exposure_mode.value() == "none")
-    {
-        //do nothing
-    }
-    else
-    {
-        RTT::log(RTT::Error) << "Exposure mode "+ _exposure_mode.value() + " is not supported!" << RTT::endlog();
-        report(UNKOWN_PARAMETER);
-        return false;
-    }
-    
-
-    
 
     // set mirrors
     if( cam_interface->isAttribAvail(enum_attrib::MirrorXToOn) &&
@@ -239,16 +164,8 @@ bool Task::configureCamera()
             cam_interface->setAttrib(enum_attrib::MirrorYToOff);
     }
 
-    // set region
-    if( cam_interface->isAttribAvail(int_attrib::RegionX) )
-        cam_interface->setAttrib(int_attrib::RegionX, _region_x.get() );
-    else
-        RTT::log(RTT::Info) << "RegionX is not supported by the camera" << RTT::endlog();
-
-    if( cam_interface->isAttribAvail(int_attrib::RegionY) )
-        cam_interface->setAttrib(int_attrib::RegionY, _region_y.get() );
-    else
-        RTT::log(RTT::Info) << "RegionY is not supported by the camera" << RTT::endlog();
+    // call the configureCamera method of the super class to apply the remaining settings
+    TaskBase::configureCamera();
 
     return true;
 }
