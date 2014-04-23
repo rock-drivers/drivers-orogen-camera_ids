@@ -30,6 +30,8 @@ task_context "Task" do
        doc "enables api directly outputs error messages"
    property("get_every_frame", "bool", false).
        doc "if true retrieves all frames, get latest frame otherwise"
+   property("gain_boost", 'bool', false).
+       doc("enable the additional analog hardware gain boost")
 
    output_port "capture_status", "camera/CaptureStatus"
 

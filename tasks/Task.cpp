@@ -78,6 +78,12 @@ bool Task::configureHook()
      if (_enable_api_log.get()) cids_ptr->setErrorReport(true);
 
      cids_ptr->setGetEveryFrame(_get_every_frame.get());
+
+     // set the gain boost if applicable
+     // the camera instance is accessed directly as the interface does not support the gain boost feature
+     if(!cids_ptr->setGainBoost(_gain_boost.get())) {
+         return false;
+     }
      
      return true;
  }
