@@ -170,6 +170,16 @@ bool Task::configureCamera()
             cam_interface->setAttrib(enum_attrib::MirrorYToOff);
     }
 
+    // auto gain
+    if( cam_interface->isAttribAvail(enum_attrib::GainModeToAuto) &&
+        cam_interface->isAttribAvail(enum_attrib::GainModeToManual) )
+    {
+        if ( _gain_mode_auto.get() )
+            cam_interface->setAttrib(enum_attrib::GainModeToAuto);
+        else
+            cam_interface->setAttrib(enum_attrib::GainModeToManual);
+    }
+
     // call the configureCamera method of the super class to apply the remaining settings
     TaskBase::configureCamera();
 
