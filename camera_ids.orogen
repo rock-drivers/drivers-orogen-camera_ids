@@ -33,6 +33,15 @@ task_context "Task" do
    property("gain_boost", 'bool', false).
        doc("enable the additional analog hardware gain boost")
 
+   property("gain_red", "unsigned int", 0).
+       doc("set gain for red color channel")
+
+   property("gain_green", "unsigned int", 0).
+       doc("set gain for green color channel")
+
+   property("gain_blue", "unsigned int", 0).
+       doc("set gain for blue color channel")
+
    output_port "capture_status", "camera/CaptureStatus"
 
    reports :TIMEOUT_ERROR

@@ -84,6 +84,18 @@ bool Task::configureHook()
      if(!cids_ptr->setGainBoost(_gain_boost.get())) {
          return false;
      }
+
+     if(_gain_red.get() > 0)
+         if(!cids_ptr->setGainRed(_gain_red.get()))
+             return false;
+
+     if(_gain_green.get() > 0)
+         if(!cids_ptr->setGainGreen(_gain_green.get()))
+             return false;
+
+     if(_gain_blue.get() > 0)
+         if(!cids_ptr->setGainBlue(_gain_blue.get()))
+             return false;
      
      return true;
  }
